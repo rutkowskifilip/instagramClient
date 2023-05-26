@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.login.setOnClickListener(v->{
+        binding.loginBtn.setOnClickListener(v->{
             String email = String.valueOf(binding.email.getText());
             String password = String.valueOf(binding.password.getText());
            Boolean emailVal = validate(email);

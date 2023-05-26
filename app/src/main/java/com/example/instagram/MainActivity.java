@@ -18,12 +18,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view);
 
 
-        binding.login.setOnClickListener(v->{
+        binding.loginBtn.setOnClickListener(v->{
             Intent login = new Intent(MainActivity.this, LoginActivity.class);
            startActivity(login);
         });
 
-        binding.register.setOnClickListener(v->{
+        binding.registerBtn.setOnClickListener(v->{
             Intent register = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(register);
         });

@@ -6,24 +6,33 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:padding="50dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome in Instagram App"
-        android:textSize="30dp"/>
+        android:textSize="30dp"
+        android:layout_marginBottom="30dp"
+        android:textAlignment="center"
+        />
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/loginBtn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Log in"
-        android:id="@+id/login"/>
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_marginBottom="10dp"
+        />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign up"
-        android:id="@+id/register"/>
+        android:id="@+id/registerBtn"
+
+      />
 
 </LinearLayout>
