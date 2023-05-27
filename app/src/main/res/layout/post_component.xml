@@ -1,63 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/usernameTextView"
-    android:text="user"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/locationTextView"
-        android:text="location"/>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:id="@+id/imageView"
-        android:src="@drawable/img"
-
-        />
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="username"
+            type="String" />
+        <variable
+            name="location"
+            type="String" />
+        <variable
+            name="tags"
+            type="java.util.ArrayList" />
+    </data>
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-        <Button
-            style="?attr/materialIconButtonStyle"
-            android:id="@+id/likeButton"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:icon="@drawable/icon_like"
-
-            />
-        <Button
-            style="?attr/materialIconButtonStyle"
-            android:id="@+id/commentButton"
-            android:layout_width="wrap_content"
+            android:id="@+id/usernameTextView"
+            android:textStyle="bold"
+            android:textSize="@dimen/bigText"
+            android:textColor="@color/black"
+            android:text="@{username}"
+            android:padding="@dimen/small"/>
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:icon="@drawable/icon_comment"
-
+            android:id="@+id/locationTextView"
+            android:text="@{location}"
+            android:paddingHorizontal="@dimen/small"
             />
-        <Button
-            style="?attr/materialIconButtonStyle"
-            android:id="@+id/shareButton"
-            android:layout_width="wrap_content"
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:icon="@drawable/icon_share"
+           android:paddingVertical="@dimen/small"
+         >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentStart="true">
 
-            />
-        <Button
-            style="?attr/materialIconButtonStyle"
-            android:id="@+id/saveButton"
-            android:layout_width="wrap_content"
+                <ImageButton
+                    android:id="@+id/likeButton"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="likeButton"
+                    android:src="@drawable/icon_like"
+                    tools:ignore="TouchTargetSizeCheck"
+                    android:padding="0dp"
+                    android:layout_marginHorizontal="@dimen/small"/>
+
+                <ImageButton
+                    android:id="@+id/commentButton"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="commentButton"
+                    android:src="@drawable/icon_comment"
+                    tools:ignore="TouchTargetSizeCheck"
+                    android:padding="0dp"
+                    android:layout_marginHorizontal="@dimen/small"/>
+
+                <ImageButton
+                    android:id="@+id/shareButton"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="shareButton"
+                    android:src="@drawable/icon_share"
+                    tools:ignore="TouchTargetSizeCheck"
+                    android:padding="0dp"
+                    android:layout_marginHorizontal="@dimen/small"
+                    />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/saveButton"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:backgroundTint="@color/white"
+                android:contentDescription="saveButton"
+                android:padding="0dp"
+                android:src="@drawable/icon_save"
+                tools:ignore="TouchTargetSizeCheck"
+                android:layout_marginHorizontal="@dimen/small"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:icon="@drawable/icon_like"
-
+            android:id="@+id/tagsLayout"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/small"
             />
-    </LinearLayout>
-
 </LinearLayout>
+</layout>

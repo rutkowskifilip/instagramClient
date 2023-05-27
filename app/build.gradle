@@ -5,7 +5,9 @@ plugins {
 android {
     namespace 'com.example.instagram'
     compileSdk 32
-
+    dataBinding {
+        enabled = true
+    }
     defaultConfig {
         applicationId "com.example.instagram"
         minSdk 21
@@ -34,7 +36,7 @@ android {
 }
 
 dependencies {
-
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
