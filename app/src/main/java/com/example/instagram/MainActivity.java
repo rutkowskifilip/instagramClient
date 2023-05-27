@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
         boolean ok = true;
         if(ok){
-            Intent mainpage = new Intent(MainActivity.this, MainPageActivity.class);
+            Intent mainpage = new Intent(MainActivity.this, ProfileActivity.class);
             mainpage.putExtra("token", "123abc");
             startActivity(mainpage);
         }

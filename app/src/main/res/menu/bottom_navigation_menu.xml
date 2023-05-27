@@ -14,6 +14,6 @@
         android:id="@+id/profilPage"
         android:enabled="true"
         android:icon="@drawable/icon_profile"
-    android:title="profile"
+        android:title="profile"
         />
 </menu>

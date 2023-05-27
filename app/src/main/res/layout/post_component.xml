@@ -22,7 +22,7 @@
             android:id="@+id/usernameTextView"
             android:textStyle="bold"
             android:textSize="@dimen/bigText"
-            android:textColor="@color/black"
+            android:textColor="@color/design_default_color_on_secondary"
             android:text="@{username}"
             android:padding="@dimen/small"/>
         <TextView
