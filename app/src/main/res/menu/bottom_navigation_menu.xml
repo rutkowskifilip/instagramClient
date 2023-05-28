@@ -3,17 +3,17 @@
     <item
         android:id="@+id/mainpage"
         android:enabled="true"
-        android:icon="@drawable/icon_home"
+        android:icon="@drawable/ic_home"
         android:title="home" />
     <item
         android:id="@+id/addPage"
         android:enabled="true"
-        android:icon="@drawable/icon_add"
+        android:icon="@drawable/ic_add"
         android:title="add" />
     <item
         android:id="@+id/profilPage"
         android:enabled="true"
-        android:icon="@drawable/icon_profile"
+        android:icon="@drawable/ic_profile"
         android:title="profile"
         />
 </menu>

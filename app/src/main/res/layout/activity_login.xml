@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:gravity="center"
     tools:context=".LoginActivity"
-    android:paddingHorizontal="@dimen/medium"
-    android:paddingBottom="@dimen/small">
+    android:paddingHorizontal="@dimen/normal_175"
+    android:paddingBottom="@dimen/small_125"
+   >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +22,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/medium"
+            android:layout_marginBottom="@dimen/normal_175"
             android:hint="email">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -36,7 +37,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/medium"
+            android:layout_marginBottom="@dimen/normal_175"
             android:hint="password"
             app:endIconMode="password_toggle">
 
@@ -75,7 +76,7 @@
             android:scaleX="0.75"
             android:scaleY="0.75"
             android:text="sign up"
-            android:textSize="@dimen/smallText"
+            android:textSize="@dimen/small_text_100"
             android:id="@+id/registerBtn"/>
     </LinearLayout>
 </RelativeLayout>

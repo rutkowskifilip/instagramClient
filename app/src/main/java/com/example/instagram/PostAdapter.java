@@ -15,22 +15,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
-import com.example.instagram.databinding.PostComponentBinding;
+import com.example.instagram.databinding.ItemPostBinding;
 import com.google.android.material.chip.Chip;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class PostAdapter extends ArrayAdapter {
     private LayoutInflater inflater;
 
-
+    private List<String> list;
 
     public PostAdapter(Context context, List<String> data) {
         super(context, 0, data);
         inflater = LayoutInflater.from(context);
+        this.list = data;
     }
 
     @NonNull
@@ -38,25 +40,20 @@ public class PostAdapter extends ArrayAdapter {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             // Inflate the list item layout using data binding
-            PostComponentBinding binding = PostComponentBinding.inflate(inflater, parent, false);
+            ItemPostBinding binding = ItemPostBinding.inflate(inflater, parent, false);
             convertView = binding.getRoot();
             convertView.setTag(binding);
         }
 
         // Get the current item
 
-        String imageUrl = "https://cdn.wamiz.fr/cdn-cgi/image/format=auto,quality=80,width=460,height=600,fit=cover/animal/breed/pictures/613f5a373cb17614656987.jpg";
-        ArrayList<String> tags = new ArrayList<>();
-        tags.add("#tag");
-        tags.add("#hash");
-        tags.add("#xd");
-        tags.add("#photo");
-        tags.add("#pic");
+
+        List<String> tags = Arrays.asList("#love", "#instagood", "#photooftheday", "#beautiful", "#tbt");
         // Bind the data to the layout
-        PostComponentBinding binding = (PostComponentBinding) convertView.getTag();
+        ItemPostBinding binding = (ItemPostBinding) convertView.getTag();
         binding.setUsername("username");
         binding.setLocation("location");
-        Picasso.get().load(imageUrl).into(binding.imageView);
+        Picasso.get().load(list.get(position)).into(binding.imageView);
         Random random = new Random();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             tags.forEach(e->{

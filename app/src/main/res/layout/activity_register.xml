@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     tools:context=".RegisterActivity"
-    android:paddingHorizontal="@dimen/big"
-    android:paddingBottom="@dimen/small">
+    android:paddingHorizontal="@dimen/large_150"
+    android:paddingBottom="@dimen/small_100">
 
 
 
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:hint="username"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="@dimen/small">
+                android:layout_marginBottom="@dimen/small_100">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:hint="name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_marginBottom="@dimen/small">
+            android:layout_marginBottom="@dimen/small_100">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:hint="last name"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="@dimen/small">
+                android:layout_marginBottom="@dimen/small_100">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:hint="email"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="@dimen/small">
+                android:layout_marginBottom="@dimen/small_100">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -87,7 +87,7 @@
                 android:hint="password"
                 app:endIconMode="password_toggle"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="@dimen/small"
+                android:layout_marginBottom="@dimen/small_100"
                 >
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -104,7 +104,7 @@
                 android:hint="repeat password"
                 app:endIconMode="password_toggle"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="@dimen/medium"
+                android:layout_marginBottom="@dimen/normal_175"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -144,7 +144,7 @@
             android:scaleX="0.75"
             android:scaleY="0.75"
             android:text="log in"
-            android:textSize="@dimen/smallText"
+            android:textSize="@dimen/small_text_100"
             style="?attr/materialButtonOutlinedStyle"
             android:id="@+id/loginBtn"/>
     </LinearLayout>

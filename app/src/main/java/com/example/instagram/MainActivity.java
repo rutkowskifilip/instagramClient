@@ -19,11 +19,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view);
 
         boolean ok = true;
-        if(ok){
-            Intent mainpage = new Intent(MainActivity.this, ProfileActivity.class);
-            mainpage.putExtra("token", "123abc");
-            startActivity(mainpage);
-        }
+//        if(ok){
+//            Intent mainpage = new Intent(MainActivity.this, ProfileActivity.class);
+//            mainpage.putExtra("token", "123abc");
+//            startActivity(mainpage);
+//        }
 
         binding.loginBtn.setOnClickListener(v->{
             Intent login = new Intent(MainActivity.this, LoginActivity.class);

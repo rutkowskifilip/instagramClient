@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="posts"
+            type="String" />
+        <variable
+            name="followers"
+            type="String" />
+        <variable
+            name="following"
+            type="String" />
+        <variable
+            name="name"
+            type="String" />
+        <variable
+            name="surname"
+            type="String" />
+        <variable
+            name="age"
+            type="String" />
+        <variable
+            name="bio"
+            type="String" />
+    </data>
+<LinearLayout
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProfileActivity"
@@ -9,7 +35,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:id="@+id/scrollView">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
 
-                android:padding="@dimen/medium">
+                android:padding="@dimen/normal_175">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -29,7 +56,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:cardCornerRadius="48dp"
-                        android:layout_marginBottom="@dimen/small">
+                        android:layout_marginBottom="@dimen/small_100">
                     <ImageView
                         android:layout_width="96dp"
                         android:layout_height="96dp"
@@ -48,19 +75,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:layout_marginHorizontal="@dimen/small"
+                            android:layout_marginHorizontal="@dimen/small_100"
                             android:gravity="center"
                             >
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/largeText"
-                                android:text="100"
-                                android:textColor="@color/design_default_color_on_secondary"/>
+                                android:textSize="@dimen/medium_text_175"
+                                android:text="@{posts}"
+                               />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/smallText"
+                                android:textSize="@dimen/small_text_100"
                                 android:text="posts"
                               />
                         </LinearLayout>
@@ -68,19 +95,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:layout_marginHorizontal="@dimen/small"
+                            android:layout_marginHorizontal="@dimen/small_100"
                             android:gravity="center"
                             >
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/largeText"
-                                android:text="100"
-                                android:textColor="@color/design_default_color_on_secondary"/>
+                                android:textSize="@dimen/medium_text_175"
+                                android:text="@{followers}"
+                               />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/smallText"
+                                android:textSize="@dimen/small_text_100"
                                 android:text="followers"
                                 />
                         </LinearLayout>
@@ -88,20 +115,21 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:layout_marginHorizontal="@dimen/small"
+                            android:layout_marginHorizontal="@dimen/small_100"
                             android:gravity="center"
                             >
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/largeText"
-                                android:text="100"
-                                android:textColor="@color/design_default_color_on_secondary"/>
+                                android:textSize="@dimen/medium_text_175"
+                                android:text="@{following}"
+                               />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/smallText"
+                                android:textSize="@dimen/small_text_100"
                                 android:text="following"
+
                                 />
                         </LinearLayout>
                     </LinearLayout>
@@ -110,17 +138,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:textSize="@dimen/mediumText"
+                    android:textSize="@dimen/medium_text_100"
                     android:textColor="@color/design_default_color_on_secondary"
-                    android:text="Name + Surname"/>
+                    android:text="@{name + surname}"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="18"/>
+                    android:text="@{age}"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Hello i am instagram app user. Like sport and programming. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+                    android:text="@{bio}"/>
             </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
@@ -138,3 +166,4 @@
         app:labelVisibilityMode="unlabeled"
         />
 </LinearLayout>
+</layout>

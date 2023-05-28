@@ -7,14 +7,19 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity"
-    android:padding="50dp">
+    android:padding="@dimen/large_150">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/large_300"
+        android:src="@drawable/ic_logo_dark"
+      />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome in Instagram App"
-        android:textSize="30dp"
-        android:layout_marginBottom="30dp"
+        android:textSize="@dimen/medium_text_150"
+        android:layout_marginBottom="@dimen/normal_150"
         android:textAlignment="center"
         />
 
@@ -24,7 +29,7 @@
         android:layout_height="wrap_content"
         android:text="Log in"
         style="?attr/materialButtonOutlinedStyle"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="@dimen/small_100"
         />
 
     <Button
