@@ -13,6 +13,9 @@
         <variable
             name="tags"
             type="java.util.ArrayList" />
+        <variable
+            name="mediatype"
+            type="String" />
     </data>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -41,13 +44,14 @@
             android:paddingBottom="@dimen/small_100"
             />
 
-        <ImageView
-            android:id="@+id/imageView"
+        <FrameLayout
+            android:id="@+id/mediaView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true">
 
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop" />
+
+        </FrameLayout>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -115,13 +119,18 @@
                 android:src="@drawable/ic_save"
                 tools:ignore="TouchTargetSizeCheck" />
         </RelativeLayout>
-        <LinearLayout
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tagsLayout"
-            android:orientation="horizontal"
+            android:scrollbars="none"
             android:paddingHorizontal="@dimen/small_100"
-            />
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/tagsLayout"/>
+        </HorizontalScrollView>
     </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>

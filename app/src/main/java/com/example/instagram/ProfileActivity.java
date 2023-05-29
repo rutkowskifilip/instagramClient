@@ -105,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePostAda
 
         postBinding.setUsername("username");
         postBinding.setLocation("location");
-        Picasso.get().load(image).into(postBinding.imageView);
+//        Picasso.get().load(image).into(postBinding.imageView);
         Random random = new Random();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             tags.forEach(e->{
