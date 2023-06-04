@@ -1,6 +1,5 @@
-package com.example.instagram;
+package com.example.instagram.view;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,6 +10,8 @@ import com.example.instagram.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,4 +37,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 }

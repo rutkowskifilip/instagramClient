@@ -1,18 +1,15 @@
-package com.example.instagram;
+package com.example.instagram.adapters;
 
-import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.instagram.databinding.ItemProfilePostBinding;
+import com.example.instagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -1,11 +1,8 @@
-package com.example.instagram;
+package com.example.instagram.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.app.Dialog;
@@ -23,10 +20,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.example.instagram.adapters.ProfilePostAdapter;
+import com.example.instagram.R;
 import com.example.instagram.databinding.ActivityProfileBinding;
 import com.example.instagram.databinding.ItemPostBinding;
 import com.google.android.material.chip.Chip;
-import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class ProfileActivity extends AppCompatActivity implements ProfilePostAdapter.OnPostListener{
+public class ProfileActivity extends AppCompatActivity implements ProfilePostAdapter.OnPostListener {
     private ActivityProfileBinding binding;
     private ArrayList images = new ArrayList<>();
     @Override
@@ -73,6 +71,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePostAda
                 following < 10000 ? new DecimalFormat("#0.00").format(following / 1000f) + "k" :
                         following < 100000 ? new DecimalFormat("#0.0").format(following / 1000f) + "k" :
                                 new DecimalFormat("#0").format(following / 1000f) + "k";
+        binding.setName("Name");
         binding.setSurname("Surname");
         binding.setAge(String.valueOf(18));
         binding.setBio("Hello i am instagram app user. Like sport and programming. Love cats. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");

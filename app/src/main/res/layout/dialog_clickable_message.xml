@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.instagram.viewmodel.RegisterViewModel"/>
+
+    </data>
+<TextView
+    android:id="@+id/text_message"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:autoLink="web"
+    android:text="@{viewModel.linkText}"
+    android:clickable="true"
+    android:onClick="@{() -> viewModel.onLinkClicked()}"
+    android:linksClickable="true"
+    android:focusable="true" />
+</layout>

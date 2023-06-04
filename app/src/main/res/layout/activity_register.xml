@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+        <data>
+            <variable
+                name="registerViewModel"
+                type="com.example.instagram.viewmodel.RegisterViewModel" />
+        </data>
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".RegisterActivity"
+    tools:context=".view.RegisterActivity"
     android:paddingHorizontal="@dimen/large_150"
     android:paddingBottom="@dimen/small_100">
 
@@ -30,6 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/username"
+                    android:value="username"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -149,3 +155,4 @@
             android:id="@+id/loginBtn"/>
     </LinearLayout>
 </RelativeLayout>
+</layout>

@@ -1,34 +1,33 @@
-package com.example.instagram;
+package com.example.instagram.view;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.example.instagram.databinding.ActivityLoginBinding;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.media3.common.util.UnstableApi;
+
 import com.example.instagram.databinding.ActivityRegisterBinding;
+import com.example.instagram.databinding.DialogClickableMessageBinding;
+import com.example.instagram.requests.RegisterRequest;
+import com.example.instagram.token.Token;
+import com.example.instagram.viewmodel.RegisterViewModel;
+import com.example.instagram.viewmodel.RegisterViewModelListener;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends AppCompatActivity {
+@UnstableApi public class RegisterActivity extends AppCompatActivity implements RegisterViewModelListener {
     private ActivityRegisterBinding binding;
-
+    RegisterViewModel registerViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +35,12 @@ public class RegisterActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+        registerViewModel.setListener(this);
+        binding.setRegisterViewModel(registerViewModel);
 
 
 
@@ -121,6 +125,8 @@ public class RegisterActivity extends AppCompatActivity {
                     for (int i = 0; i < errorFields.length; i++) {
                         errorFields[i].setError(null);
                     }
+                    RegisterRequest user = new RegisterRequest(username, name, lastname, email, pass);
+                    registerViewModel.register(user);
 
                 }
 
@@ -128,6 +134,16 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                 }
+        });
+        registerViewModel.getObservedUser().observe(RegisterActivity.this, s->{
+            binding.setRegisterViewModel(registerViewModel);
+            if(s != null){
+
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }else{
+                Log.d("xxx", "incorrect data");
+            }
         });
         binding.loginBtn.setOnClickListener(v->{
             Intent login = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -149,4 +165,24 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(intent);
         return true;
     }
+
+    @Override
+    public void showAlert(String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        DialogClickableMessageBinding binding = DialogClickableMessageBinding.inflate(inflater, null, false);
+        binding.setViewModel(registerViewModel);
+
+        View view = binding.getRoot();
+
+        builder.setView(view)
+                .setTitle(title)
+                .setNegativeButton("Cancel", null);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
 }
+

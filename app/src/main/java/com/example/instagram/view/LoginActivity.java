@@ -1,8 +1,11 @@
-package com.example.instagram;
+package com.example.instagram.view;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.media3.common.util.UnstableApi;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,21 +14,27 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.instagram.databinding.ActivityLoginBinding;
-import com.example.instagram.databinding.ActivityMainBinding;
+import com.example.instagram.requests.LoginRequest;
+import com.example.instagram.token.Token;
+import com.example.instagram.viewmodel.LoginViewModel;
+import com.example.instagram.viewmodel.LoginViewModelListener;
+import com.example.instagram.viewmodel.RegisterViewModelListener;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginActivity extends AppCompatActivity {
+@UnstableApi public class LoginActivity extends AppCompatActivity implements LoginViewModelListener {
     private ActivityLoginBinding binding;
+    LoginViewModel loginViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        loginViewModel.setListener(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -52,18 +61,30 @@ public class LoginActivity extends AppCompatActivity {
             if (validate(email) && !password.isEmpty()) {
                 emailL.setError(null);
                 passL.setError(null);
-                Boolean ok = true;
-                if(ok){
-                    Intent mainpage = new Intent(LoginActivity.this, MainPageActivity.class);
-                    String token = "123abc";
-                    mainpage.putExtra("token", token);
-                    startActivity(mainpage);
-                }
+
+                LoginRequest user = new LoginRequest(email, password);
+                loginViewModel.login(user);
+//                    Intent mainpage = new Intent(LoginActivity.this, MainPageActivity.class);
+//                    String token = "123abc";
+//                    mainpage.putExtra("token", token);
+//                    startActivity(mainpage);
+
             } else {
                 emailL.setError(email.isEmpty() ? "empty field" : (validate(email) ? null : "wrong email"));
                 passL.setError(password.isEmpty() ? "empty field" : null);
             }
         });
+        loginViewModel.getObservedUser().observe(LoginActivity.this, s->{
+            if(s != null){
+
+                Token.setToken(s.getToken());
+                Intent intent = new Intent(LoginActivity.this, MainPageActivity.class);
+                startActivity(intent);
+            }else{
+                Log.d("xxx", "incorrect data");
+            }
+        });
+
         binding.registerBtn.setOnClickListener(v->{
             Intent register = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(register);
@@ -81,4 +102,17 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         return true;
     }
+    @Override
+    public void showAlert(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle(title)
+                .setMessage(message)
+                .setNegativeButton("Cancel", null);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
 }
