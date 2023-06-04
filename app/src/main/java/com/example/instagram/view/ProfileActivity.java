@@ -3,6 +3,7 @@ package com.example.instagram.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.app.Dialog;
@@ -24,6 +25,10 @@ import com.example.instagram.adapters.ProfilePostAdapter;
 import com.example.instagram.R;
 import com.example.instagram.databinding.ActivityProfileBinding;
 import com.example.instagram.databinding.ItemPostBinding;
+import com.example.instagram.model.User;
+import com.example.instagram.token.Token;
+import com.example.instagram.viewmodel.LoginViewModel;
+import com.example.instagram.viewmodel.ProfileViewModel;
 import com.google.android.material.chip.Chip;
 
 import java.text.DecimalFormat;
@@ -35,15 +40,26 @@ import java.util.Random;
 public class ProfileActivity extends AppCompatActivity implements ProfilePostAdapter.OnPostListener {
     private ActivityProfileBinding binding;
     private ArrayList images = new ArrayList<>();
+    ProfileViewModel profileViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        profileViewModel.getProfile();
+        profileViewModel.getObservedUser().observe(ProfileActivity.this, s->{
+            if(s != null){
 
-        setTitle("username");
+                setTitle(s.getUsername());
+                binding.setName(s.getName());
+                binding.setSurname(s.getLastname());
 
+            }else{
+                Log.d("xxx", "incorrect data");
+            }
+        });
         binding.bottomNavigation.setSelectedItemId(R.id.profilPage);
         binding.bottomNavigation.setOnItemSelectedListener(v -> {
             Log.d("xxx", String.valueOf(v));
@@ -53,6 +69,9 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePostAda
             }
             return false;
         });
+
+
+
         String imageUrl = "https://cdn.wamiz.fr/cdn-cgi/image/format=auto,quality=80,width=460,height=600,fit=cover/animal/breed/pictures/613f5a373cb17614656987.jpg";
         String imageUrl2 = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Gandu%C5%9B.jpg/640px-Gandu%C5%9B.jpg";
         String imageUrl3 = "https://apetete.pl/blog/wp-content/uploads/2017/03/brytyjczyki-koty.png";

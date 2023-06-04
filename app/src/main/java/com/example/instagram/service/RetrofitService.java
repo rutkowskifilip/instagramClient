@@ -1,5 +1,6 @@
 package com.example.instagram.service;
 
+import com.example.instagram.api.ProfileAPI;
 import com.example.instagram.api.UserAPI;
 
 
@@ -14,5 +15,9 @@ public class RetrofitService {
     public static UserAPI getUserAPI()
     {
         return retrofit.create(UserAPI.class);
+    }
+    public static ProfileAPI getProfileAPI()
+    {
+        return retrofit.create(ProfileAPI.class);
     }
 }
