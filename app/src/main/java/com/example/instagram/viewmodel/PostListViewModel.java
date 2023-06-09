@@ -1,7 +1,5 @@
 package com.example.instagram.viewmodel;
 
-
-
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -12,37 +10,20 @@ import com.example.instagram.model.User;
 import com.example.instagram.service.RetrofitService;
 import com.example.instagram.token.Token;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfileViewModel extends ViewModel {
-    private MutableLiveData<User> mutableUser;
+public class PostListViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Post>> mutablePosts;
-    public ProfileViewModel(){
-        this.mutableUser = new MutableLiveData<>();
+    public PostListViewModel(){
         this.mutablePosts = new MutableLiveData<>();
     }
-    public void getProfile(){
-//        Log.d("xxx", "getProfile:");
-        Call<User> call = RetrofitService.getProfileAPI().get("Bearer " + Token.getToken());
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                mutableUser.setValue(response.body());
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.d("xxx", t.getMessage());
-            }
-        });
-        }
-        public void getProfilePhotos(String username){
-        Call<ArrayList<Post>> call = RetrofitService.getPostAPI().get(username);
+    public void getPosts(){
+        Call<ArrayList<Post>> call = RetrofitService.getPostAPI().getAll();
         call.enqueue(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
@@ -55,14 +36,11 @@ public class ProfileViewModel extends ViewModel {
                 Log.d("xxx", t.getMessage());
             }
         });
-        }
-
-    public MutableLiveData<User> getObservedUser(){
-        return mutableUser;
     }
+
+
 
     public MutableLiveData<ArrayList<Post>> getObservedPosts(){
         return mutablePosts;
     }
 }
-

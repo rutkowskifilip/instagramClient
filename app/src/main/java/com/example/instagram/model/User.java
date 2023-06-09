@@ -6,7 +6,7 @@ public class User {
     private int id;
     private String username;
     private String name;
-    private String lastname;
+    private String lastName;
     private String email;
     private String password;
     private boolean confirmed;
@@ -28,8 +28,8 @@ public class User {
         return name;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
     public String getEmail() {

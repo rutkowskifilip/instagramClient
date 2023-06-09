@@ -19,20 +19,25 @@ import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.databinding.ItemPostBinding;
+import com.example.instagram.model.Post;
+import com.example.instagram.service.RetrofitService;
 import com.google.android.material.chip.Chip;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import retrofit2.http.POST;
+
 @UnstableApi public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     private LayoutInflater inflater;
-    private List<String> list;
+    private ArrayList<Post> list;
 
-    public PostAdapter(Context context, List<String> data) {
+    public PostAdapter(Context context, ArrayList<Post> data) {
         inflater = LayoutInflater.from(context);
         this.list = data;
     }
@@ -48,10 +53,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Get the current item
-        String link = list.get(position);
-        int lastDotIndex = link.lastIndexOf(".");
-        String type = link.substring(lastDotIndex + 1);
-        holder.binding.setUsername("username");
+        Post post = list.get(position);
+        String url = post.getUrl();
+        int lastDotIndex = url.lastIndexOf(".");
+        String type = url.substring(lastDotIndex + 1);
+        holder.binding.setUsername(post.getAlbum());
         holder.binding.setLocation("location");
 
         if (type.equals("jpg")) {
@@ -65,7 +71,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
             iv.setScaleType(ImageView.ScaleType.CENTER);
             iv.setAdjustViewBounds(true);
             holder.binding.mediaView.addView(iv);
-            Picasso.get().load(list.get(position)).into(iv);
+            Picasso.get().load(RetrofitService.getBaseUrl()+"/api/getfile/"+ post.getId()).into(iv);
         } else {
             ExoPlayer player = new ExoPlayer.Builder(holder.itemView.getContext()).build();
             PlayerView playerView = new PlayerView(holder.itemView.getContext());
@@ -73,7 +79,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT
             );
-            MediaItem mediaItem = MediaItem.fromUri(list.get(position));
+            MediaItem mediaItem = MediaItem.fromUri(RetrofitService.getBaseUrl()+"/api/getfile/"+ post.getId());
 
             playerView.setLayoutParams(params);
             playerView.setControllerHideOnTouch(true);

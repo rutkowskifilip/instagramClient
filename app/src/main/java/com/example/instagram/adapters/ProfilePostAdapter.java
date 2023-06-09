@@ -1,5 +1,6 @@
 package com.example.instagram.adapters;
 
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.R;
+import com.example.instagram.model.Post;
+import com.example.instagram.service.RetrofitService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.ViewHolder> {
-    private ArrayList<String> list;
+    private ArrayList<Post> list;
     private OnPostListener mOnPostListener;
     public ProfilePostAdapter(ArrayList images, OnPostListener onPostListener) {
         this.list = images;
@@ -35,10 +38,10 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ProfilePostAdapter.ViewHolder holder, int position) {
-        String res = list.get(position);
+        Post post = list.get(position);
         Picasso
                 .get()
-                .load(res)
+                .load(RetrofitService.getBaseUrl() + "/api/getfile/"+post.getId())
                 .into(holder.image);
 
 

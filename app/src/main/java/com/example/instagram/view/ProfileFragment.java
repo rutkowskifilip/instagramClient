@@ -1,35 +1,41 @@
 package com.example.instagram.view;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.example.instagram.adapters.ProfilePostAdapter;
 import com.example.instagram.R;
-import com.example.instagram.databinding.ActivityProfileBinding;
+import com.example.instagram.adapters.ProfilePostAdapter;
+import com.example.instagram.databinding.FragmentProfileBinding;
 import com.example.instagram.databinding.ItemPostBinding;
-import com.example.instagram.model.User;
-import com.example.instagram.token.Token;
-import com.example.instagram.viewmodel.LoginViewModel;
+import com.example.instagram.model.Post;
+import com.example.instagram.service.RetrofitService;
 import com.example.instagram.viewmodel.ProfileViewModel;
 import com.google.android.material.chip.Chip;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,49 +43,65 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class ProfileActivity extends AppCompatActivity implements ProfilePostAdapter.OnPostListener {
-    private ActivityProfileBinding binding;
-    private ArrayList images = new ArrayList<>();
-    ProfileViewModel profileViewModel;
+public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPostListener{
+
+    private ProfileViewModel profileViewModel;
+    private ArrayList<Post> images = new ArrayList<>();
+    FragmentProfileBinding binding;
+    public static ProfileFragment newInstance() {
+        return new ProfileFragment();
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityProfileBinding.inflate(getLayoutInflater());
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        binding = FragmentProfileBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-        setContentView(view);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+        // Check if the activity is not null
+        if (activity != null) {
+            // Get the action bar
+            ActionBar actionBar = activity.getSupportActionBar();
+
+            // Check if the action bar is not null
+            if (actionBar != null) {
+                // Hide the action bar
+                actionBar.show();
+            }
+        }
+
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         profileViewModel.getProfile();
-        profileViewModel.getObservedUser().observe(ProfileActivity.this, s->{
+
+        profileViewModel.getObservedUser().observe(getViewLifecycleOwner(), s->{
             if(s != null){
 
-                setTitle(s.getUsername());
+                Log.d("xxx","lastanem " + s.getLastName());
+                getActivity().setTitle(s.getUsername());
+                profileViewModel.getProfilePhotos(s.getUsername());
                 binding.setName(s.getName());
                 binding.setSurname(s.getLastName());
+
 
             }else{
                 Log.d("xxx", "incorrect data");
             }
         });
-        binding.bottomNavigation.setSelectedItemId(R.id.profilPage);
-        binding.bottomNavigation.setOnItemSelectedListener(v -> {
-            Log.d("xxx", String.valueOf(v));
-            if(String.valueOf(v).equals("home")){
-                Intent profile = new Intent(ProfileActivity.this, MainPageActivity.class);
-                startActivity(profile);
+
+        profileViewModel.getObservedPosts().observe(getViewLifecycleOwner(),s->{
+            if(s!= null){
+                Log.d("xxx", String.valueOf(s.size()));
+                binding.setPosts(String.valueOf(s.size()));
+                StaggeredGridLayoutManager staggeredGridLayoutManager
+                        = new StaggeredGridLayoutManager(3, LinearLayout.VERTICAL);
+                binding.recyclerView.setLayoutManager(staggeredGridLayoutManager);
+                ProfilePostAdapter adapter = new ProfilePostAdapter(s, this);
+                binding.recyclerView.setAdapter(adapter);
+                images = s;
             }
-            return false;
         });
 
-
-
-        String imageUrl = "https://cdn.wamiz.fr/cdn-cgi/image/format=auto,quality=80,width=460,height=600,fit=cover/animal/breed/pictures/613f5a373cb17614656987.jpg";
-        String imageUrl2 = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Gandu%C5%9B.jpg/640px-Gandu%C5%9B.jpg";
-        String imageUrl3 = "https://apetete.pl/blog/wp-content/uploads/2017/03/brytyjczyki-koty.png";
-        String imageUrl4 = "https://hodowlakotybrytyjskie.pl/wordpress/wp-content/uploads/2023/01/IMG_71721-scaled.jpg";
-
-        images = new ArrayList<String>(Arrays.asList(
-                imageUrl, imageUrl2, imageUrl3,imageUrl4, imageUrl, imageUrl2,imageUrl3, imageUrl4, imageUrl, imageUrl2,imageUrl3, imageUrl4
-                ));
         int followers = 123456;
         int following = 12345;
         String formattedFollowers = followers < 1000 ? String.valueOf(followers) :
@@ -90,44 +112,48 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePostAda
                 following < 10000 ? new DecimalFormat("#0.00").format(following / 1000f) + "k" :
                         following < 100000 ? new DecimalFormat("#0.0").format(following / 1000f) + "k" :
                                 new DecimalFormat("#0").format(following / 1000f) + "k";
-        binding.setName("Name");
-        binding.setSurname("Surname");
+
         binding.setAge(String.valueOf(18));
         binding.setBio("Hello i am instagram app user. Like sport and programming. Love cats. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         binding.setPosts(String.valueOf(images.size()));
         binding.setFollowers(formattedFollowers);
         binding.setFollowing(formattedFollowing);
-//        ArrayList images = new ArrayList<>(Arrays.asList(
-//                R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,  R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,  R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img,R.drawable.img
-//        ));
-        StaggeredGridLayoutManager staggeredGridLayoutManager
-                = new StaggeredGridLayoutManager(3, LinearLayout.VERTICAL);
-        binding.recyclerView.setLayoutManager(staggeredGridLayoutManager);
-        ProfilePostAdapter adapter = new ProfilePostAdapter(images, this);
-        binding.recyclerView.setAdapter(adapter);
 
 
 
+        return view;
     }
 
     @Override
     public void onPostClick(int position) {
-        String image = (String) images.get(position);
-        Log.d("xxx", image);
-        Dialog dialog = new Dialog(this);
+        Post image = images.get(position);
+
+//        Log.d("xxx", image);
+        Dialog dialog = new Dialog(getContext());
 
 
 
-        ItemPostBinding postBinding = DataBindingUtil.inflate(LayoutInflater.from(this),R.layout.item_post, null,false);
+        ItemPostBinding postBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()),R.layout.item_post, null,false);
         List<String> tags = Arrays.asList("#love", "#instagood", "#photooftheday", "#beautiful", "#tbt");
 
-        postBinding.setUsername("username");
+        postBinding.setUsername(image.getAlbum());
         postBinding.setLocation("location");
-//        Picasso.get().load(image).into(postBinding.imageView);
+//        Picasso.get().load(RetrofitService.getBaseUrl()+"/api/getfile/"+image.getId()).into(postBinding.imageView);
+        ImageView iv = new ImageView(postBinding.mediaView.getContext());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        iv.setLayoutParams(params);
+        iv.setScaleType(ImageView.ScaleType.CENTER);
+        iv.setAdjustViewBounds(true);
+        postBinding.mediaView.addView(iv);
+        Picasso.get().load(RetrofitService.getBaseUrl()+"/api/getfile/"+image.getId()).into(iv);
         Random random = new Random();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             tags.forEach(e->{
-                Chip chip = new Chip(this);
+                Chip chip = new Chip(getContext());
                 chip.setText(e);
                 chip.setChipBackgroundColor(ColorStateList.valueOf(Color.rgb(random.nextInt(256),random.nextInt(256),random.nextInt(256))));
 
@@ -143,8 +169,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePostAda
         dialog.getWindow().setAttributes(lp);
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        Intent intent = new Intent(this, MainPageActivity.class);
-//        startActivity(intent);
+
     }
     public class CustomDialogFragment extends DialogFragment {
         /** The system calls this to get the DialogFragment's layout, regardless
@@ -169,4 +194,5 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePostAda
         }
     }
 //
+
 }
