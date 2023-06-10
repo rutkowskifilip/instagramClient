@@ -58,6 +58,7 @@ import java.util.List;
                 actionBar.hide();
             }
         }
+
         postListViewModel.getPosts();
         postListViewModel.getObservedPosts().observe(getViewLifecycleOwner(), s->{
             if(s != null){

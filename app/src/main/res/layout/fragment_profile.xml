@@ -17,7 +17,7 @@
             name="name"
             type="String" />
         <variable
-            name="surname"
+            name="lastname"
             type="String" />
         <variable
             name="age"
@@ -140,7 +140,7 @@
                         android:textStyle="bold"
                         android:textSize="@dimen/medium_text_100"
                         android:textColor="@color/design_default_color_on_secondary"
-                        android:text="@{name +' '+ surname}"/>
+                        android:text="@{name +' '+ lastname}"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

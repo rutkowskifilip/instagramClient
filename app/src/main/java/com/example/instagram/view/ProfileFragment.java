@@ -77,11 +77,11 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
         profileViewModel.getObservedUser().observe(getViewLifecycleOwner(), s->{
             if(s != null){
 
-                Log.d("xxx","lastanem " + s.getLastName());
                 getActivity().setTitle(s.getUsername());
                 profileViewModel.getProfilePhotos(s.getUsername());
                 binding.setName(s.getName());
-                binding.setSurname(s.getLastName());
+                binding.setLastname(s.getLastName());
+
 
 
             }else{
