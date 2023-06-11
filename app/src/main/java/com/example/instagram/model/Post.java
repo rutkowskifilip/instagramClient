@@ -10,7 +10,12 @@ public class Post {
     private String url;
     private String lastChange;
     private ArrayList<Map<String, String>> history;
-    private ArrayList<String> tags;
+    private ArrayList<Map<String, String>> tags;
+    private String location;
+
+    public String getLocation() {
+        return location;
+    }
 
     public String getId() {
         return id;
@@ -36,7 +41,7 @@ public class Post {
         return history;
     }
 
-    public ArrayList<String> getTags() {
+    public ArrayList<Map<String, String>> getTags() {
         return tags;
     }
 }

@@ -17,7 +17,6 @@ import androidx.media3.common.util.UnstableApi;
 import com.example.instagram.databinding.ActivityRegisterBinding;
 import com.example.instagram.databinding.DialogClickableMessageBinding;
 import com.example.instagram.requests.RegisterRequest;
-import com.example.instagram.token.Token;
 import com.example.instagram.viewmodel.RegisterViewModel;
 import com.example.instagram.viewmodel.RegisterViewModelListener;
 import com.google.android.material.textfield.TextInputLayout;

@@ -35,8 +35,8 @@ private ActivityMainPageBinding binding;
         binding = ActivityMainPageBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        replaceFragment(new SelectPhotoFragment());
-        checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 100);
+        replaceFragment(new PostListFragment());
+
 //        binding.bottomNavigation.setSelectedItemId(R.id.mainpage);
         binding.bottomNavigation.setOnItemSelectedListener(v -> {
             Log.d("xxx", String.valueOf(v));
@@ -54,16 +54,5 @@ private ActivityMainPageBinding binding;
         });
 
     }
-    public void checkPermission(String permission, int requestCode) {
-        // jeśli nie jest przyznane to zażądaj
 
-        if (ContextCompat.checkSelfPermission(MainPageActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
-            Log.d("xxx", "checkPermission: true");
-
-            ActivityCompat.requestPermissions(MainPageActivity.this,new String[]{permission}, requestCode);
-        } else {
-            Log.d("xxx", "checkPermission: false");
-            Toast.makeText(MainPageActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
-        }
-    }
 }

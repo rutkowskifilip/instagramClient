@@ -5,15 +5,15 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.instagram.model.User;
 import com.example.instagram.requests.LoginRequest;
+import com.example.instagram.responses.LoginResponse;
 import com.example.instagram.service.RetrofitService;
-import com.example.instagram.token.Token;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginViewModel extends ViewModel {
-    private MutableLiveData<User> mutableUser;
+    private MutableLiveData<LoginResponse> mutableUser;
 
     private LoginViewModelListener listener;
 
@@ -27,11 +27,11 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login(LoginRequest user){
-        Call<User> call = RetrofitService.getUserAPI().login(user);
+        Call<LoginResponse> call = RetrofitService.getUserAPI().login(user);
 
-        call.enqueue(new Callback<User>() {
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if(response.code() == 200) {
 
 
@@ -43,12 +43,12 @@ public class LoginViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
 
             }
         });
     }
-    public MutableLiveData<User> getObservedUser(){
+    public MutableLiveData<LoginResponse> getObservedUser(){
         return mutableUser;
     }
 }

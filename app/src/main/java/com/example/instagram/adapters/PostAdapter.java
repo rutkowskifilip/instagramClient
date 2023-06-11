@@ -7,6 +7,7 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -58,8 +59,8 @@ import retrofit2.http.POST;
         int lastDotIndex = url.lastIndexOf(".");
         String type = url.substring(lastDotIndex + 1);
         holder.binding.setUsername(post.getAlbum());
-        holder.binding.setLocation("location");
 
+        holder.binding.setLocation(post.getLocation());
         if (type.equals("jpg")) {
             ImageView iv = new ImageView(holder.itemView.getContext());
 
@@ -129,11 +130,13 @@ import retrofit2.http.POST;
         Random random = new Random();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             List<String> tags = Arrays.asList("#love", "#instagood", "#photooftheday", "#beautiful", "#tbt");
-            tags.forEach(e -> {
+            post.getTags().forEach(e -> {
                 Chip chip = new Chip(holder.itemView.getContext());
-                chip.setText(e);
+                chip.setText(e.get("name"));
                 chip.setChipBackgroundColor(ColorStateList.valueOf(Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))));
-
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(0,0,10,0);
+                chip.setLayoutParams(layoutParams);
                 holder.binding.tagsLayout.addView(chip);
             });
         }

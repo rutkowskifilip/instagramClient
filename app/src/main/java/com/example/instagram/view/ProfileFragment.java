@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -32,22 +33,30 @@ import com.example.instagram.adapters.ProfilePostAdapter;
 import com.example.instagram.databinding.FragmentProfileBinding;
 import com.example.instagram.databinding.ItemPostBinding;
 import com.example.instagram.model.Post;
+import com.example.instagram.model.User;
 import com.example.instagram.service.RetrofitService;
+import com.example.instagram.store.Store;
 import com.example.instagram.viewmodel.ProfileViewModel;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPostListener{
+public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPostListener {
 
     private ProfileViewModel profileViewModel;
     private ArrayList<Post> images = new ArrayList<>();
+    private User user;
     FragmentProfileBinding binding;
+    private MaterialToolbar toolbar;
+
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
     }
@@ -58,44 +67,55 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         AppCompatActivity activity = (AppCompatActivity) getActivity();
+        toolbar = binding.topAppBar;
+//        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
-        // Check if the activity is not null
-        if (activity != null) {
-            // Get the action bar
-            ActionBar actionBar = activity.getSupportActionBar();
+        // Set up the button click listener
+        toolbar.setOnMenuItemClickListener(v -> {
+            if (v.getItemId() == R.id.logoutBtn) {
+                Store.setToken(null);
+                Store.setUser(null);
+                Intent logout = new Intent(getContext(), MainActivity.class);
+                startActivity(logout);
 
-            // Check if the action bar is not null
-            if (actionBar != null) {
-                // Hide the action bar
-                actionBar.show();
+            } else if (v.getItemId() == R.id.settingBtn) {
+
+                Intent settings = new Intent(getContext(), SettingsActivity.class);
+                settings.putExtra("name", user.getName());
+                settings.putExtra("lastname", user.getLastName());
+                startActivity(settings);
             }
-        }
+            return false;
+        });
+        // Check if the activity is not null
+
 
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         profileViewModel.getProfile();
 
-        profileViewModel.getObservedUser().observe(getViewLifecycleOwner(), s->{
-            if(s != null){
-
+        profileViewModel.getObservedUser().observe(getViewLifecycleOwner(), s -> {
+            if (s != null) {
+                user = s;
                 getActivity().setTitle(s.getUsername());
                 profileViewModel.getProfilePhotos(s.getUsername());
                 binding.setName(s.getName());
                 binding.setLastname(s.getLastName());
+                binding.setUsername(s.getUsername());
 
 
-
-            }else{
+            } else {
                 Log.d("xxx", "incorrect data");
             }
         });
 
-        profileViewModel.getObservedPosts().observe(getViewLifecycleOwner(),s->{
-            if(s!= null){
+        profileViewModel.getObservedPosts().observe(getViewLifecycleOwner(), s -> {
+            if (s != null) {
                 Log.d("xxx", String.valueOf(s.size()));
                 binding.setPosts(String.valueOf(s.size()));
                 StaggeredGridLayoutManager staggeredGridLayoutManager
                         = new StaggeredGridLayoutManager(3, LinearLayout.VERTICAL);
                 binding.recyclerView.setLayoutManager(staggeredGridLayoutManager);
+
                 ProfilePostAdapter adapter = new ProfilePostAdapter(s, this);
                 binding.recyclerView.setAdapter(adapter);
                 images = s;
@@ -120,8 +140,14 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
         binding.setFollowing(formattedFollowing);
 
 
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        profileViewModel.getProfile();
     }
 
     @Override
@@ -131,14 +157,11 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
 //        Log.d("xxx", image);
         Dialog dialog = new Dialog(getContext());
 
-
-
-        ItemPostBinding postBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()),R.layout.item_post, null,false);
-        List<String> tags = Arrays.asList("#love", "#instagood", "#photooftheday", "#beautiful", "#tbt");
+        ItemPostBinding postBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.item_post, null, false);
 
         postBinding.setUsername(image.getAlbum());
-        postBinding.setLocation("location");
-//        Picasso.get().load(RetrofitService.getBaseUrl()+"/api/getfile/"+image.getId()).into(postBinding.imageView);
+        postBinding.setLocation(image.getLocation());
+
         ImageView iv = new ImageView(postBinding.mediaView.getContext());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -149,14 +172,15 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
         iv.setScaleType(ImageView.ScaleType.CENTER);
         iv.setAdjustViewBounds(true);
         postBinding.mediaView.addView(iv);
-        Picasso.get().load(RetrofitService.getBaseUrl()+"/api/getfile/"+image.getId()).into(iv);
+        Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + image.getId()).into(iv);
         Random random = new Random();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            tags.forEach(e->{
+            image.getTags().forEach(e -> {
                 Chip chip = new Chip(getContext());
-                chip.setText(e);
-                chip.setChipBackgroundColor(ColorStateList.valueOf(Color.rgb(random.nextInt(256),random.nextInt(256),random.nextInt(256))));
-
+                chip.setText(e.get("name"));
+                chip.setChipBackgroundColor(ColorStateList.valueOf(Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))));
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(0, 0, 10, 0);
                 postBinding.tagsLayout.addView(chip);
             });
         }
@@ -164,16 +188,19 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.width = (int) (binding.scrollView.getWidth()*0.9);
+        lp.width = (int) (binding.scrollView.getWidth() * 0.9);
         dialog.show();
         dialog.getWindow().setAttributes(lp);
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
     }
+
     public class CustomDialogFragment extends DialogFragment {
-        /** The system calls this to get the DialogFragment's layout, regardless
-         of whether it's being displayed as a dialog or an embedded fragment. */
+        /**
+         * The system calls this to get the DialogFragment's layout, regardless
+         * of whether it's being displayed as a dialog or an embedded fragment.
+         */
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -181,7 +208,9 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
             return inflater.inflate(R.layout.item_post, container, false);
         }
 
-        /** The system calls this only when creating the layout in a dialog. */
+        /**
+         * The system calls this only when creating the layout in a dialog.
+         */
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // The only reason you might override this method when using onCreateView() is

@@ -1,5 +1,8 @@
 package com.example.instagram.view;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -44,6 +47,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -59,6 +63,10 @@ public class SelectPhotoFragment extends Fragment implements OnItemClick {
 
     FragmentSelectPhotoBinding binding;
     private MaterialToolbar toolbar;
+    private String[] REQUIRED_PERMISSIONS = new String[]{
+            "android.permission.WRITE_EXTERNAL_STORAGE",
+            "android.permission.READ_EXTERNAL_STORAGE"};
+    private ActivityResultLauncher<String> requestPermissionLauncher;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -68,6 +76,15 @@ public class SelectPhotoFragment extends Fragment implements OnItemClick {
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                getPhotos();
+            } else {
+                // Permission denied, handle accordingly
+            }
+
+        });
+        requestPermission();
         // Check if the activity is not null
         if (activity != null) {
             // Get the action bar
@@ -85,7 +102,8 @@ public class SelectPhotoFragment extends Fragment implements OnItemClick {
         // Set up the button click listener
         toolbar.setOnMenuItemClickListener(v-> {
               Intent upload = new Intent(getContext(), UploadPostActivity.class);
-              upload.putExtra("photo", selectedPhoto);
+              upload.putExtra("uri", selectedPhoto);
+              upload.putExtra("type", "image");
               startActivity(upload);
             return false;
         });
@@ -123,7 +141,9 @@ public class SelectPhotoFragment extends Fragment implements OnItemClick {
         });
         return view;
     }
-
+    private void getPhotos(){
+        Log.d("xxx", "getPhotos: ");
+    }
     private ArrayList<File> getPictureFiles() {
         ArrayList<File> pictureFiles = new ArrayList<>();
 
@@ -150,6 +170,18 @@ public class SelectPhotoFragment extends Fragment implements OnItemClick {
 
         Picasso.get().load(selectedPhoto).into(binding.selectedPhoto);
     }
+    public void requestPermission() {
+      // Replace with the desired permission
+         String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+        if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+           getPhotos();
+        } else {
+            // Permission is not granted, request it
+            requestPermissionLauncher.launch(permission);
+        }
+    }
+
+
 
 }
 

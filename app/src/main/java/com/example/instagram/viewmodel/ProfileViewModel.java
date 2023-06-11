@@ -10,9 +10,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.instagram.model.Post;
 import com.example.instagram.model.User;
 import com.example.instagram.service.RetrofitService;
-import com.example.instagram.token.Token;
+import com.example.instagram.store.Store;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -28,7 +27,7 @@ public class ProfileViewModel extends ViewModel {
     }
     public void getProfile(){
 //        Log.d("xxx", "getProfile:");
-        Call<User> call = RetrofitService.getProfileAPI().get("Bearer " + Token.getToken());
+        Call<User> call = RetrofitService.getProfileAPI().get("Bearer " + Store.getToken());
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

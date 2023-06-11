@@ -14,6 +14,9 @@
             name="following"
             type="String" />
         <variable
+            name="username"
+            type="String" />
+        <variable
             name="name"
             type="String" />
         <variable
@@ -32,6 +35,20 @@
         android:layout_height="match_parent"
         tools:context=".view.ProfileFragment"
         android:orientation="vertical">
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:title="@{username}"
+                app:menu="@menu/profile_top_menu"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                />
+
+        </com.google.android.material.appbar.AppBarLayout>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"

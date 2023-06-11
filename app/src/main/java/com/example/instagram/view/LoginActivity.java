@@ -15,10 +15,9 @@ import android.widget.EditText;
 
 import com.example.instagram.databinding.ActivityLoginBinding;
 import com.example.instagram.requests.LoginRequest;
-import com.example.instagram.token.Token;
+import com.example.instagram.store.Store;
 import com.example.instagram.viewmodel.LoginViewModel;
 import com.example.instagram.viewmodel.LoginViewModelListener;
-import com.example.instagram.viewmodel.RegisterViewModelListener;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.regex.Matcher;
@@ -76,8 +75,10 @@ import java.util.regex.Pattern;
         });
         loginViewModel.getObservedUser().observe(LoginActivity.this, s->{
             if(s != null){
+                Log.d("xxxx", "login: "+ s.getUser().getUsername());
+                Store.setToken(s.getToken());
+                Store.setUser(s.getUser());
 
-                Token.setToken(s.getToken());
                 Intent intent = new Intent(LoginActivity.this, MainPageActivity.class);
                 startActivity(intent);
             }else{

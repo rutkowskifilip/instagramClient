@@ -29,6 +29,7 @@ import com.example.instagram.viewmodel.ProfileViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @UnstableApi public class PostListFragment extends Fragment {
@@ -66,6 +67,7 @@ import java.util.List;
                 RecyclerView listView = binding.listView;
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                 listView.setLayoutManager(layoutManager);
+                Collections.reverse(posts);
                 PostAdapter adapter = new PostAdapter(getContext(), posts);
                 listView.setAdapter(adapter);
             }

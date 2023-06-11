@@ -52,6 +52,7 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityCameraBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
+        getSupportActionBar().hide();
         setContentView(view);
         if (!checkIfPermissionsGranted()) {
             ActivityCompat.requestPermissions(this,REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE);

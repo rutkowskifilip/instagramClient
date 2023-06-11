@@ -16,6 +16,7 @@ import com.example.instagram.service.RetrofitService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.ViewHolder> {
@@ -23,6 +24,7 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
     private OnPostListener mOnPostListener;
     public ProfilePostAdapter(ArrayList images, OnPostListener onPostListener) {
         this.list = images;
+
         this.mOnPostListener = onPostListener;
     }
 
@@ -31,7 +33,7 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
     public ProfilePostAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_profile_post, parent, false);
-
+        Collections.reverse(list);
         return new ViewHolder(v, mOnPostListener);
 
     }

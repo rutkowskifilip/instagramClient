@@ -4,14 +4,14 @@ public class RegisterRequest {
 
     private String username;
     private String name;
-    private String lastname;
+    private String lastName;
     private String email;
     private String password;
 
     public RegisterRequest(String username, String name, String lastname, String email, String password) {
         this.username = username;
         this.name = name;
-        this.lastname = lastname;
+        this.lastName = lastname;
         this.email = email;
         this.password = password;
     }

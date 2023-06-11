@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.instagram.model.Post;
-import com.example.instagram.model.User;
 import com.example.instagram.service.RetrofitService;
-import com.example.instagram.token.Token;
 
 import java.util.ArrayList;
 

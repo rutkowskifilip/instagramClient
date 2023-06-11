@@ -48,7 +48,8 @@
             android:id="@+id/mediaView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true">
+            android:clickable="true"
+            android:focusable="true">
 
 
         </FrameLayout>
@@ -129,7 +130,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:id="@+id/tagsLayout"/>
+                android:id="@+id/tagsLayout"
+               />
         </HorizontalScrollView>
     </LinearLayout>
     </androidx.cardview.widget.CardView>

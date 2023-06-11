@@ -20,11 +20,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view);
 
         boolean ok = true;
-        if(ok){
-            Intent mainpage = new Intent(MainActivity.this, MainPageActivity.class);
-
-            startActivity(mainpage);
-        }
+//        if(ok){
+//            Intent mainpage = new Intent(MainActivity.this, CameraActivity.class);
+//
+//            startActivity(mainpage);
+//        }
 
         binding.loginBtn.setOnClickListener(v->{
             Intent login = new Intent(MainActivity.this, LoginActivity.class);
