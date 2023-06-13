@@ -96,12 +96,13 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
         profileViewModel.getObservedUser().observe(getViewLifecycleOwner(), s -> {
             if (s != null) {
                 user = s;
+                Store.setUser(user);
                 getActivity().setTitle(s.getUsername());
-                profileViewModel.getProfilePhotos(s.getUsername());
+                profileViewModel.getProfilePhotos(s.getEmail());
                 binding.setName(s.getName());
                 binding.setLastname(s.getLastName());
                 binding.setUsername(s.getUsername());
-
+                Picasso.get().load(RetrofitService.getBaseUrl()+"/api/getfile/profile/"+ s.getProfilePic()).into(binding.profilePic);
 
             } else {
                 Log.d("xxx", "incorrect data");
@@ -115,10 +116,11 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
                 StaggeredGridLayoutManager staggeredGridLayoutManager
                         = new StaggeredGridLayoutManager(3, LinearLayout.VERTICAL);
                 binding.recyclerView.setLayoutManager(staggeredGridLayoutManager);
-
-                ProfilePostAdapter adapter = new ProfilePostAdapter(s, this);
-                binding.recyclerView.setAdapter(adapter);
                 images = s;
+                Collections.reverse(images);
+                ProfilePostAdapter adapter = new ProfilePostAdapter(images, this);
+                binding.recyclerView.setAdapter(adapter);
+
             }
         });
 
@@ -159,7 +161,7 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
 
         ItemPostBinding postBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.item_post, null, false);
 
-        postBinding.setUsername(image.getAlbum());
+        postBinding.setUsername(user.getUsername());
         postBinding.setLocation(image.getLocation());
 
         ImageView iv = new ImageView(postBinding.mediaView.getContext());
@@ -172,6 +174,7 @@ public class ProfileFragment extends Fragment implements ProfilePostAdapter.OnPo
         iv.setScaleType(ImageView.ScaleType.CENTER);
         iv.setAdjustViewBounds(true);
         postBinding.mediaView.addView(iv);
+        Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/profile/" + user.getProfilePic()).into(postBinding.profilePic);
         Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + image.getId()).into(iv);
         Random random = new Random();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

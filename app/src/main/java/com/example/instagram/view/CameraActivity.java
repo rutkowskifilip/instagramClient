@@ -9,24 +9,34 @@ import androidx.camera.core.VideoCapture;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.example.instagram.databinding.ActivityCameraBinding;
+import com.example.instagram.store.Store;
+import com.example.instagram.viewmodel.CameraViewModel;
+import com.example.instagram.viewmodel.UploadPostViewModel;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.File;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class CameraActivity extends AppCompatActivity {
     ActivityCameraBinding binding;
@@ -44,7 +54,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private VideoCapture videoCapture;
     ProcessCameraProvider cameraProvider;
-
+CameraViewModel cameraViewModel;
     private boolean isRecording = true;
     @SuppressLint("RestrictedApi")
     @Override
@@ -52,6 +62,7 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityCameraBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
+        Bundle extras = getIntent().getExtras();
         getSupportActionBar().hide();
         setContentView(view);
         if (!checkIfPermissionsGranted()) {
@@ -59,7 +70,7 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             cameraStart();
         }
-
+        cameraViewModel = new ViewModelProvider(this).get(CameraViewModel.class);
         binding.takePhotoBtn.setOnClickListener(v -> {
             String timestamp = String.valueOf(new Date().getTime());
             ContentValues contentValues = new ContentValues();
@@ -77,11 +88,21 @@ public class CameraActivity extends AppCompatActivity {
                     new ImageCapture.OnImageSavedCallback() {
                         @Override
                         public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                            Intent intent = new Intent(CameraActivity.this, UploadPostActivity.class);
-                            intent.putExtra("uri", outputFileResults.getSavedUri().toString());
-                            intent.putExtra("type", "image");
-                            intent.putExtra("timestamp", timestamp);
-                            startActivity(intent);
+                            if(extras.get("type").equals("post")) {
+                                Intent intent = new Intent(CameraActivity.this, UploadPostActivity.class);
+                                intent.putExtra("uri", outputFileResults.getSavedUri().toString());
+                                intent.putExtra("type", "image");
+                                intent.putExtra("timestamp", timestamp);
+                                startActivity(intent);
+                            }else{
+                                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + timestamp + ".jpg");
+                                RequestBody fileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                                MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), fileRequest);
+                                RequestBody album = RequestBody.create(MultipartBody.FORM, Store.getUser().getEmail()); //TODO
+                                cameraViewModel.sendPost(album,body);
+
+                            }
+
                         }
 
                         @Override
@@ -103,6 +124,15 @@ public class CameraActivity extends AppCompatActivity {
             }
 
             return true;
+        });
+        cameraViewModel.getObservedPost().observe(this, s->{
+                if(s!=null){
+                    Intent settings = new Intent(CameraActivity.this, SettingsActivity.class);
+                    settings.putExtra("image", String.valueOf(s.getId()));
+                    startActivity(settings);
+                    finish();
+
+                };
         });
 
     }

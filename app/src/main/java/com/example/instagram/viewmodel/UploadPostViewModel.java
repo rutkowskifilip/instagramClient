@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.instagram.model.Post;
+import com.example.instagram.requests.FilterRequest;
 import com.example.instagram.requests.TagRequest;
 import com.example.instagram.service.RetrofitService;
 
@@ -25,6 +26,20 @@ public class UploadPostViewModel extends ViewModel {
         this.mutablePost = new MutableLiveData<>();
     }
 
+    public void filter(FilterRequest filterRequest){
+        Call<Post> call = RetrofitService.getFiltersAPI().filter(filterRequest);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                mutablePost.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                Log.d("xxx",t.getMessage());
+            }
+        });
+    }
     public void sendPost(RequestBody album, MultipartBody.Part body){
         Call<Post> call = RetrofitService.getPostAPI().sendPost(album, body);
 
@@ -40,6 +55,7 @@ public class UploadPostViewModel extends ViewModel {
             }
         });
     }
+
     public void addTags(int id, ArrayList<String> tags){
 
         TagRequest tagsReq = new TagRequest(id, tags);

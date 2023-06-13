@@ -41,10 +41,11 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
     @Override
     public void onBindViewHolder(@NonNull ProfilePostAdapter.ViewHolder holder, int position) {
         Post post = list.get(position);
-        Picasso
-                .get()
-                .load(RetrofitService.getBaseUrl() + "/api/getfile/"+post.getId())
-                .into(holder.image);
+        if(post.getLastChange().equals("original")) {
+            Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + post.getId()).into(holder.image);
+        }else {
+            Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + post.getId()+"/"+post.getLastChange()).into(holder.image);
+        }
 
 
 //        holder.image.setImageResource(res);

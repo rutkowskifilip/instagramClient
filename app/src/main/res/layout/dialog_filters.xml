@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <Button
+        android:id="@+id/flipBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Flip" />
+    <Button
+        android:id="@+id/flopBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Flop" />
+
+    <Button
+        android:id="@+id/rotateBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rotate" />
+    <Button
+        android:id="@+id/negateBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Negate" />
+
+    <Button
+        android:id="@+id/grayBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Grayscale" />
+    <Button
+        android:id="@+id/cancelBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancel" />
+
+
+</LinearLayout>

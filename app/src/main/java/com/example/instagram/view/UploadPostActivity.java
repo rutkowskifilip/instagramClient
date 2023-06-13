@@ -1,6 +1,7 @@
 package com.example.instagram.view;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,8 +24,13 @@ import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.AspectRatioFrameLayout;
 import androidx.media3.ui.PlayerView;
 
+import com.example.instagram.R;
+import com.example.instagram.api.FiltersAPI;
 import com.example.instagram.databinding.ActivityUploadPostBinding;
+import com.example.instagram.databinding.DialogFiltersBinding;
 import com.example.instagram.databinding.ItemAddTagsBinding;
+import com.example.instagram.requests.FilterRequest;
+import com.example.instagram.service.RetrofitService;
 import com.example.instagram.store.Store;
 import com.example.instagram.viewmodel.MapsViewModel;
 import com.example.instagram.viewmodel.UploadPostViewModel;
@@ -52,6 +58,9 @@ public class UploadPostActivity extends AppCompatActivity {
     private ArrayList<Map<String, String>> tags;
     private String location;
     private MaterialToolbar toolbar;
+    private String type;
+    private String lastChange;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,34 +72,76 @@ public class UploadPostActivity extends AppCompatActivity {
 //        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
         // Set up the button click listener
-        toolbar.setOnMenuItemClickListener(v-> {
+        toolbar.setOnMenuItemClickListener(v -> {
             Intent main = new Intent(UploadPostActivity.this, MainPageActivity.class);
 
             startActivity(main);
             return false;
         });
         uploadPostViewModel = new ViewModelProvider(this).get(UploadPostViewModel.class);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            type = extras.getString("type");
+            String timestamp = extras.getString("timestamp");
+            uploadFile(type, timestamp);
+
+        }
+
         mapsViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
         uploadPostViewModel.getObservedPost().observe(this, s -> {
             if (s != null) {
                 PHOTO_ID = Integer.parseInt(s.getId());
                 tags = s.getTags();
+                lastChange = s.getLastChange();
                 location = s.getLocation();
                 binding.location.setText(location);
+                loadMedia(type);
                 updateTags();
             }
 
         });
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String uri = extras.getString("uri");
-            String type = extras.getString("type");
-            String timestamp = extras.getString("timestamp");
-            loadMedia(uri, type);
-            uploadFile(type, timestamp);
+        if (!type.equals("image")) {
+            binding.addFilterBtn.setVisibility(View.GONE);
         }
 
+        binding.addFilterBtn.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            DialogFiltersBinding binding = DialogFiltersBinding.inflate(LayoutInflater.from(this));
+            View dialogView = binding.getRoot();
+            builder.setView(dialogView);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            binding.cancelBtn.setOnClickListener(l -> {
+                dialog.dismiss();
+            });
+            binding.flipBtn.setOnClickListener(l -> {
+                FilterRequest filterRequest = new FilterRequest(PHOTO_ID, "flip");
+                uploadPostViewModel.filter(filterRequest);
+                dialog.dismiss();
+            });
+            binding.flopBtn.setOnClickListener(l -> {
+                FilterRequest filterRequest = new FilterRequest(PHOTO_ID, "flop");
+                uploadPostViewModel.filter(filterRequest);
+                dialog.dismiss();
+            });
+            binding.rotateBtn.setOnClickListener(l -> {
+                FilterRequest filterRequest = new FilterRequest(PHOTO_ID, "rotate");
+                uploadPostViewModel.filter(filterRequest);
+                dialog.dismiss();
+            });
+            binding.negateBtn.setOnClickListener(l -> {
+                FilterRequest filterRequest = new FilterRequest(PHOTO_ID, "negate");
+                uploadPostViewModel.filter(filterRequest);
+                dialog.dismiss();
+            });
+            binding.grayBtn.setOnClickListener(l -> {
+                FilterRequest filterRequest = new FilterRequest(PHOTO_ID, "grayscale");
+                uploadPostViewModel.filter(filterRequest);
+                dialog.dismiss();
+            });
+
+
+        });
 
         binding.addTagBtn.setOnClickListener(v -> {
             openTagDialog();
@@ -108,17 +159,20 @@ public class UploadPostActivity extends AppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
 
         uploadPostViewModel = new ViewModelProvider(this).get(UploadPostViewModel.class);
-        if (uploadPostViewModel.getObservedPost().getValue() != null) {
-            Log.d("xxx", "onWindowFocusChanged: ");
-            PHOTO_ID = Integer.parseInt(uploadPostViewModel.getObservedPost().getValue().getId());
-            tags = uploadPostViewModel.getObservedPost().getValue().getTags();
-            Log.d("xxx", uploadPostViewModel.getObservedPost().getValue().getLocation());
-            location = uploadPostViewModel.getObservedPost().getValue().getLocation();
-            binding.location.setText(location);
-            updateTags();
-        }
-    }
+        uploadPostViewModel.getObservedPost().observe(this, s -> {
+            if (s != null) {
+                Log.d("xxx", "onWindowFocusChanged: ");
+                PHOTO_ID = Integer.parseInt(s.getId());
+                tags = s.getTags();
+                lastChange = s.getLastChange();
+                Log.d("xxx", uploadPostViewModel.getObservedPost().getValue().getLocation());
+                location = uploadPostViewModel.getObservedPost().getValue().getLocation();
+                binding.location.setText(location);
+                updateTags();
+            }
+        });
 
+    }
 
 
     private void updateTags() {
@@ -207,11 +261,12 @@ public class UploadPostActivity extends AppCompatActivity {
         File file = new File(type.equals("video") ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) + "/" + timestamp + ".mp4" : Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + timestamp + ".jpg");
         RequestBody fileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), fileRequest);
-        RequestBody album = RequestBody.create(MultipartBody.FORM, Store.getUser().getUsername()); //TODO
+        RequestBody album = RequestBody.create(MultipartBody.FORM, Store.getUser().getEmail());
+        Log.d("xxx", Store.getUser().getUsername() + " " + file);
         uploadPostViewModel.sendPost(album, body);
     }
 
-    private void loadMedia(String uri, String type) {
+    private void loadMedia(String type) {
         if (type.equals("image")) {
             ImageView iv = new ImageView(this);
 
@@ -223,7 +278,11 @@ public class UploadPostActivity extends AppCompatActivity {
             iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
             binding.mediaView.addView(iv);
 
-            Picasso.get().load(uri).rotate(90).into(iv);
+            if (lastChange.equals("original")) {
+                Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + PHOTO_ID).into(iv);
+            } else {
+                Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + PHOTO_ID + "/" + lastChange).into(iv);
+            }
         } else {
             ExoPlayer player = new ExoPlayer.Builder(this).build();
             PlayerView playerView = new PlayerView(this);
@@ -231,7 +290,7 @@ public class UploadPostActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            MediaItem mediaItem = MediaItem.fromUri(uri);
+            MediaItem mediaItem = MediaItem.fromUri(RetrofitService.getBaseUrl() + "/api/getfile/" + PHOTO_ID);
             playerView.setLayoutParams(params);
             playerView.setControllerHideOnTouch(true);
             playerView.setUseController(false);

@@ -11,6 +11,11 @@ public class User {
     private String password;
     private boolean confirmed;
     private String token;
+    private String profilePic;
+
+    public String getProfilePic() {
+        return profilePic;
+    }
 
     public String getToken() {
         return token;

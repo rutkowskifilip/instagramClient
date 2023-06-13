@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -28,15 +28,19 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import retrofit2.http.POST;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @UnstableApi public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     private LayoutInflater inflater;
     private ArrayList<Post> list;
+
 
     public PostAdapter(Context context, ArrayList<Post> data) {
         inflater = LayoutInflater.from(context);
@@ -48,17 +52,37 @@ import retrofit2.http.POST;
     public PostAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate the item layout using data binding
         ItemPostBinding binding = ItemPostBinding.inflate(inflater, parent, false);
+
         return new ViewHolder(binding);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         // Get the current item
+
         Post post = list.get(position);
         String url = post.getUrl();
         int lastDotIndex = url.lastIndexOf(".");
         String type = url.substring(lastDotIndex + 1);
-        holder.binding.setUsername(post.getAlbum());
+
+
+            Call<Map<String,String>> call = RetrofitService.getUserAPI().find(post.getAlbum());
+            call.enqueue(new Callback<Map<String,String>>() {
+                @Override
+                public void onResponse(Call<Map<String,String>> call, Response<Map<String,String >> response) {
+                    Log.d("xxx", response.body().get("user"));
+                    holder.binding.setUsername(response.body().get("user"));
+                    Picasso.get().load(RetrofitService.getBaseUrl()+"/api/getfile/profile/"+ response.body().get("profilePic")).into(holder.binding.profilePic);
+                }
+
+                @Override
+                public void onFailure(Call<Map<String,String>> call, Throwable t) {
+                    Log.d("xxx", "er " +t.getMessage());
+                }
+            });
+
 
         holder.binding.setLocation(post.getLocation());
         if (type.equals("jpg")) {
@@ -72,7 +96,12 @@ import retrofit2.http.POST;
             iv.setScaleType(ImageView.ScaleType.CENTER);
             iv.setAdjustViewBounds(true);
             holder.binding.mediaView.addView(iv);
-            Picasso.get().load(RetrofitService.getBaseUrl()+"/api/getfile/"+ post.getId()).into(iv);
+            if(post.getLastChange().equals("original")) {
+                Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + post.getId()).into(iv);
+            }else {
+                Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + post.getId()+"/"+post.getLastChange()).into(iv);
+            }
+
         } else {
             ExoPlayer player = new ExoPlayer.Builder(holder.itemView.getContext()).build();
             PlayerView playerView = new PlayerView(holder.itemView.getContext());

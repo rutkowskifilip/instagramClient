@@ -23,9 +23,11 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@UnstableApi public class LoginActivity extends AppCompatActivity implements LoginViewModelListener {
+@UnstableApi
+public class LoginActivity extends AppCompatActivity implements LoginViewModelListener {
     private ActivityLoginBinding binding;
     LoginViewModel loginViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,23 +39,23 @@ import java.util.regex.Pattern;
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        EditText emailET =binding.email;
+        EditText emailET = binding.email;
         TextInputLayout emailL = binding.emailTextField;
-        TextInputLayout passL= binding.passwordTextField;
+        TextInputLayout passL = binding.passwordTextField;
         emailET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
                 String email = String.valueOf(emailET.getText());
-                if(!b) {
-                    if(!validate(email) && !email.equals("")){
+                if (!b) {
+                    if (!validate(email) && !email.equals("")) {
                         emailL.setError("wrong email");
-                    } else{
+                    } else {
                         emailL.setError(null);
                     }
                 }
             }
-        } );
-        binding.loginBtn.setOnClickListener(v->{
+        });
+        binding.loginBtn.setOnClickListener(v -> {
             String email = emailET.getText().toString();
             String password = binding.password.getText().toString();
 
@@ -62,6 +64,7 @@ import java.util.regex.Pattern;
                 passL.setError(null);
 
                 LoginRequest user = new LoginRequest(email, password);
+
                 loginViewModel.login(user);
 //                    Intent mainpage = new Intent(LoginActivity.this, MainPageActivity.class);
 //                    String token = "123abc";
@@ -73,24 +76,25 @@ import java.util.regex.Pattern;
                 passL.setError(password.isEmpty() ? "empty field" : null);
             }
         });
-        loginViewModel.getObservedUser().observe(LoginActivity.this, s->{
-            if(s != null){
-                Log.d("xxxx", "login: "+ s.getUser().getUsername());
+        loginViewModel.getObservedUser().observe(LoginActivity.this, s -> {
+            if (s != null) {
+                Log.d("xxxx", "login: " + s.getUser().getUsername());
                 Store.setToken(s.getToken());
                 Store.setUser(s.getUser());
-
+                Log.d("xxx", String.valueOf(s));
                 Intent intent = new Intent(LoginActivity.this, MainPageActivity.class);
                 startActivity(intent);
-            }else{
+            } else {
                 Log.d("xxx", "incorrect data");
             }
         });
 
-        binding.registerBtn.setOnClickListener(v->{
+        binding.registerBtn.setOnClickListener(v -> {
             Intent register = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(register);
         });
     }
+
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
@@ -98,11 +102,13 @@ import java.util.regex.Pattern;
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.matches();
     }
-    public boolean onOptionsItemSelected(MenuItem item){
+
+    public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         return true;
     }
+
     @Override
     public void showAlert(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -7,59 +7,73 @@
     android:orientation="vertical"
     tools:context=".view.UploadPostActivity"
     tools:ignore="MissingClass">
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="New post"
             app:menu="@menu/select_photo_top_menu"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary"
-            />
+            app:title="New post" />
 
     </com.google.android.material.appbar.AppBarLayout>
-    <FrameLayout
-        android:id="@+id/mediaView"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true" />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="@dimen/small_100">
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/tags"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/addTagBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="add tags" />
+            <FrameLayout
+                android:id="@+id/mediaView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true" />
 
-        <TextView
-            android:id="@+id/location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/addLocationBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="add location" />
-        <Button
-            android:id="@+id/addFilterBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="add filter" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/small_100">
 
-    </LinearLayout>
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/addTagBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="add tags" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/addLocationBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="add location" />
+
+                <Button
+                    android:id="@+id/addFilterBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="add filter" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

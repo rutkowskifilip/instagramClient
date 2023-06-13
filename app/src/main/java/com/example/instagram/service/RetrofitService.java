@@ -1,5 +1,6 @@
 package com.example.instagram.service;
 
+import com.example.instagram.api.FiltersAPI;
 import com.example.instagram.api.PostAPI;
 import com.example.instagram.api.ProfileAPI;
 import com.example.instagram.api.UserAPI;
@@ -29,4 +30,6 @@ public class RetrofitService {
     {
         return retrofit.create(PostAPI.class);
     }
+
+    public static FiltersAPI getFiltersAPI(){return retrofit.create(FiltersAPI.class);}
 }

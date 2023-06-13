@@ -1,5 +1,7 @@
 package com.example.instagram.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -28,13 +30,13 @@ public class LoginViewModel extends ViewModel {
 
     public void login(LoginRequest user){
         Call<LoginResponse> call = RetrofitService.getUserAPI().login(user);
-
+        Log.d("xx", "login: ");
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if(response.code() == 200) {
 
-
+                    Log.d("xxx", "onResponse: ");
                     mutableUser.setValue(response.body());
                 }else if(response.code() == 400){
 
@@ -44,7 +46,7 @@ public class LoginViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-
+                Log.d("xxx", "onFailure: "+t.getMessage());
             }
         });
     }

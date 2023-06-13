@@ -137,6 +137,7 @@ public class SelectPhotoFragment extends Fragment implements OnItemClick {
 //        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 100);
         binding.cameraBtn.setOnClickListener(v->{
             Intent camera = new Intent(getContext(), CameraActivity.class);
+            camera.putExtra("type", "post");
             startActivity(camera);
         });
         return view;

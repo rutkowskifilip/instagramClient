@@ -24,8 +24,8 @@ public class SettingsViewModel extends ViewModel {
         this.mutableUser = new MutableLiveData<>();
 
     }
-    public void updateUser(String name, String lastname, String password){
-        UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest(Store.getUser().getEmail(), name, lastname, password);
+    public void updateUser(String name, String lastname, String password, String profilePic){
+        UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest(Store.getUser().getEmail(), name, lastname, password, profilePic);
         Call<User> call = RetrofitService.getProfileAPI().update("Bearer " + Store.getToken(), updateProfileRequest);
 
         call.enqueue(new Callback<User>() {
