@@ -32,6 +32,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".MainActivity2"
+            android:exported="false" />
+        <activity
             android:name=".view.SettingsActivity"
             android:exported="false" />
         <!--

@@ -22,11 +22,11 @@ import retrofit2.Response;
 public class UploadPostViewModel extends ViewModel {
     private MutableLiveData<Post> mutablePost;
 
-    public UploadPostViewModel(){
+    public UploadPostViewModel() {
         this.mutablePost = new MutableLiveData<>();
     }
 
-    public void filter(FilterRequest filterRequest){
+    public void filter(FilterRequest filterRequest) {
         Call<Post> call = RetrofitService.getFiltersAPI().filter(filterRequest);
         call.enqueue(new Callback<Post>() {
             @Override
@@ -36,11 +36,12 @@ public class UploadPostViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
-                Log.d("xxx",t.getMessage());
+                Log.d("xxx", t.getMessage());
             }
         });
     }
-    public void sendPost(RequestBody album, MultipartBody.Part body){
+
+    public void sendPost(RequestBody album, MultipartBody.Part body) {
         Call<Post> call = RetrofitService.getPostAPI().sendPost(album, body);
 
         call.enqueue(new Callback<Post>() {
@@ -51,12 +52,16 @@ public class UploadPostViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
-                Log.d("xxx",t.getMessage());
+                Log.d("xxx", t.getMessage());
             }
         });
     }
 
-    public void addTags(int id, ArrayList<String> tags){
+    public void refresh() {
+        mutablePost.setValue(mutablePost.getValue());
+    }
+
+    public void addTags(int id, ArrayList<String> tags) {
 
         TagRequest tagsReq = new TagRequest(id, tags);
         Call<Post> call = RetrofitService.getPostAPI().addTags(tagsReq);
@@ -68,7 +73,7 @@ public class UploadPostViewModel extends ViewModel {
 
             @Override
             public void onFailure(@NonNull Call<Post> call, Throwable t) {
-                Log.d("xxx","error " +t.getMessage());
+                Log.d("xxx", "error " + t.getMessage());
             }
         });
     }

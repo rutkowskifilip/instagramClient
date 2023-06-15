@@ -1,6 +1,7 @@
 package com.example.instagram.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
@@ -20,6 +21,7 @@ import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.databinding.ItemPostBinding;
+
 import com.example.instagram.model.Post;
 import com.example.instagram.service.RetrofitService;
 import com.google.android.material.chip.Chip;
@@ -36,10 +38,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@UnstableApi public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+@UnstableApi
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     private LayoutInflater inflater;
     private ArrayList<Post> list;
+
 
 
     public PostAdapter(Context context, ArrayList<Post> data) {
@@ -68,20 +72,20 @@ import retrofit2.Response;
         String type = url.substring(lastDotIndex + 1);
 
 
-            Call<Map<String,String>> call = RetrofitService.getUserAPI().find(post.getAlbum());
-            call.enqueue(new Callback<Map<String,String>>() {
-                @Override
-                public void onResponse(Call<Map<String,String>> call, Response<Map<String,String >> response) {
-                    Log.d("xxx", response.body().get("user"));
-                    holder.binding.setUsername(response.body().get("user"));
-                    Picasso.get().load(RetrofitService.getBaseUrl()+"/api/getfile/profile/"+ response.body().get("profilePic")).into(holder.binding.profilePic);
-                }
+        Call<Map<String, String>> call = RetrofitService.getUserAPI().find(post.getAlbum());
+        call.enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                Log.d("xxx", response.body().get("user"));
+                holder.binding.setUsername(response.body().get("user"));
+                Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/profile/" + response.body().get("profilePic")).into(holder.binding.profilePic);
+            }
 
-                @Override
-                public void onFailure(Call<Map<String,String>> call, Throwable t) {
-                    Log.d("xxx", "er " +t.getMessage());
-                }
-            });
+            @Override
+            public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                Log.d("xxx", "er " + t.getMessage());
+            }
+        });
 
 
         holder.binding.setLocation(post.getLocation());
@@ -96,10 +100,10 @@ import retrofit2.Response;
             iv.setScaleType(ImageView.ScaleType.CENTER);
             iv.setAdjustViewBounds(true);
             holder.binding.mediaView.addView(iv);
-            if(post.getLastChange().equals("original")) {
+            if (post.getLastChange().equals("original")) {
                 Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + post.getId()).into(iv);
-            }else {
-                Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + post.getId()+"/"+post.getLastChange()).into(iv);
+            } else {
+                Picasso.get().load(RetrofitService.getBaseUrl() + "/api/getfile/" + post.getId() + "/" + post.getLastChange()).into(iv);
             }
 
         } else {
@@ -109,7 +113,7 @@ import retrofit2.Response;
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT
             );
-            MediaItem mediaItem = MediaItem.fromUri(RetrofitService.getBaseUrl()+"/api/getfile/"+ post.getId());
+            MediaItem mediaItem = MediaItem.fromUri(RetrofitService.getBaseUrl() + "/api/getfile/" + post.getId());
 
             playerView.setLayoutParams(params);
             playerView.setControllerHideOnTouch(true);
@@ -134,22 +138,22 @@ import retrofit2.Response;
                     playing.set(false);
                 }
             });
-            playerView.setOnFocusChangeListener((v,hasFocus)->{
-                if(hasFocus) {
+            playerView.setOnFocusChangeListener((v, hasFocus) -> {
+                if (hasFocus) {
 
-                }else{
+                } else {
 
                 }
             });
-            playerView.setOnClickListener(v->{
+            playerView.setOnClickListener(v -> {
 
-            if(playing.get()){
-                player.pause();
-                playing.set(false);
-            }else{
-                player.play();
-                playing.set(true);
-            }
+                if (playing.get()) {
+                    player.pause();
+                    playing.set(false);
+                } else {
+                    player.play();
+                    playing.set(true);
+                }
             });
 //            player.play();
 
@@ -164,17 +168,20 @@ import retrofit2.Response;
                 chip.setText(e.get("name"));
                 chip.setChipBackgroundColor(ColorStateList.valueOf(Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))));
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layoutParams.setMargins(0,0,10,0);
+                layoutParams.setMargins(0, 0, 10, 0);
                 chip.setLayoutParams(layoutParams);
                 holder.binding.tagsLayout.addView(chip);
             });
         }
+
     }
 
     @Override
     public int getItemCount() {
         return list.size();
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ItemPostBinding binding;
@@ -184,4 +191,5 @@ import retrofit2.Response;
             this.binding = binding;
         }
     }
+
 }

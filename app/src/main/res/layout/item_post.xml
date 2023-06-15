@@ -68,7 +68,8 @@
                     android:id="@+id/locationTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{location}" />
+                    android:text="@{location}"
+                    android:clickable="true"/>
             </LinearLayout>
         </LinearLayout>
 

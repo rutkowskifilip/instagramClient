@@ -38,6 +38,10 @@ public class MapsViewModel extends ViewModel {
             }
         });
     }
+    public void refresh(){
+        mutablePost.setValue(mutablePost.getValue());
+    }
+
     public MutableLiveData<Post> getObservedPost() {
         return mutablePost;
     }

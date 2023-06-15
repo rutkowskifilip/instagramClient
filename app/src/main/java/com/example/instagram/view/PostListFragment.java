@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,7 +33,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@UnstableApi public class PostListFragment extends Fragment {
+@UnstableApi public class PostListFragment extends Fragment{
 
     private PostListViewModel postListViewModel;
 
@@ -69,6 +70,7 @@ import java.util.List;
                 listView.setLayoutManager(layoutManager);
                 Collections.reverse(posts);
                 PostAdapter adapter = new PostAdapter(getContext(), posts);
+
                 listView.setAdapter(adapter);
             }
         });
@@ -83,7 +85,6 @@ import java.util.List;
 
         return view;
     }
-
 
 
 

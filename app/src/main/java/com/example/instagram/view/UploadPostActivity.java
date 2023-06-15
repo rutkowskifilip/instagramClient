@@ -149,6 +149,7 @@ public class UploadPostActivity extends AppCompatActivity {
         binding.addLocationBtn.setOnClickListener(v -> {
             Intent maps = new Intent(UploadPostActivity.this, MapsActivity.class);
             maps.putExtra("id", PHOTO_ID);
+            maps.putExtra("type", "setter");
             startActivity(maps);
         });
 
@@ -157,17 +158,18 @@ public class UploadPostActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-
         uploadPostViewModel = new ViewModelProvider(this).get(UploadPostViewModel.class);
+        uploadPostViewModel.addTags(PHOTO_ID, new ArrayList<>());
         uploadPostViewModel.getObservedPost().observe(this, s -> {
             if (s != null) {
                 Log.d("xxx", "onWindowFocusChanged: ");
                 PHOTO_ID = Integer.parseInt(s.getId());
                 tags = s.getTags();
                 lastChange = s.getLastChange();
-                Log.d("xxx", uploadPostViewModel.getObservedPost().getValue().getLocation());
-                location = uploadPostViewModel.getObservedPost().getValue().getLocation();
+                Log.d("xxx", s.getLocation());
+                location = s.getLocation();
                 binding.location.setText(location);
+                loadMedia(type);
                 updateTags();
             }
         });

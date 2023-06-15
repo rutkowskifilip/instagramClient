@@ -33,7 +33,7 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
     public ProfilePostAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_profile_post, parent, false);
-        Collections.reverse(list);
+        
         return new ViewHolder(v, mOnPostListener);
 
     }
